@@ -19,7 +19,6 @@ import {
 } from './CustomComponents'
 
 const Todo = ({ todo, toggle, remove, edit }) => {
-
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleCheckbox = (e) => {
@@ -57,7 +56,7 @@ const Todo = ({ todo, toggle, remove, edit }) => {
         <ListItemText
           primary={
             <Typography variant="h5" >
-              { todo.task }
+              { todo.task } { todo.date.toLocaleDateString('en-GB') }
             </Typography>
           }
           secondary={ todo.description }

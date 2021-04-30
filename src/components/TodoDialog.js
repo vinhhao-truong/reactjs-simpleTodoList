@@ -126,7 +126,6 @@ const TodoDialog = ({ todo, edit, openStatus, setOpenStatus }) => {
           <TextField
             fullWidth multiline
             label="Description"
-            variant="outlined"
             value={ tempTodo.description }
             onChange={ handleEditDes }
             onFocus={ handleFocusEnd }

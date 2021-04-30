@@ -55,6 +55,8 @@ const TodoList = ({
     }
   }
 
+  console.log(todos)
+
   const theList = (listWidth) => {
     return (
       <>

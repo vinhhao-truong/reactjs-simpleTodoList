@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     const storageItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-    if(storageItems) {
+    if (storageItems) {
       setTodos(storageItems)
     }
   }, [])
@@ -20,13 +20,15 @@ function App() {
   }, [todos])
 
   const addTodo = (newTodo) => {
-    setTodos([...todos, newTodo])
+    setTodos(
+      [...todos, newTodo].sort((a, b) => (b.date - a.date))
+    )
   }
 
   const toggle = (id) => {
     setTodos(
       todos.map(todo => {
-        if(todo.id === id) {
+        if (todo.id === id) {
           return {
             ...todo,
             completed: !todo.completed
@@ -63,15 +65,15 @@ function App() {
   const edit = (id, newContent) => {
     setTodos(
       todos.map(todo => {
-        if(todo.id === id) {
+        if (todo.id === id) {
           return {
             ...newContent
           }
         }
         return todo;
       })
-    )       
-  } 
+    )
+  }
 
   return (
     <div className="App">
