@@ -1,11 +1,10 @@
 import React from 'react'
 import {
   Checkbox,
-  Fab
+  Fab,
+  Snackbar
 } from '@material-ui/core'
-import {
-
-} from '@material-ui/icons'
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 
 const greenColor = "#0cca98";
@@ -15,6 +14,8 @@ const darkRed = "#dd4747";
 const whiteColor = "#f6f6f6";
 const blueColor = "#0278ae";
 const darkBlue = "#28518a";
+
+
 
 //Customized components
 const GreenCheckbox = withStyles({
@@ -81,6 +82,24 @@ const EditUncheckedButton = withStyles({
   }
 })(Fab);
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const ResponseMessage = ({ type, content, openStatus, handleClose }) => {
+  return (
+    <Snackbar
+      open={ openStatus }
+      autoHideDuration={ 4000 }
+      onClose={ handleClose }
+    >
+      <Alert onClose={ handleClose } severity={ type } >
+        { content }
+      </Alert>
+    </Snackbar>
+  )
+}
+
 //Apply styles for components
 const useMarkCheckboxStyles = makeStyles({
   label: {
@@ -124,6 +143,7 @@ export {
   OkButton,
   EditCheckedButton,
   EditUncheckedButton,
+  ResponseMessage,
   useMarkCheckboxStyles,
   useBlankCheckboxStyles,
   checkedStyle,

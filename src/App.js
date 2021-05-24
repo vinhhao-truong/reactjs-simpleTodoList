@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react';
 import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
 import './assets/scss/custom.scss';
+import { ResponseMessage } from './components/CustomComponents'
 
 const LOCAL_STORAGE_KEY = "react-todo-list-todos";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [message, setMessage] = useState({ openStatus: false, type: "", content: "" });
 
   useEffect(() => {
     const storageItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
     if (storageItems) {
+      storageItems.forEach(item => {
+        item.date = new Date(item.date);
+      })
       setTodos(storageItems)
     }
   }, [])
@@ -20,8 +25,9 @@ function App() {
   }, [todos])
 
   const addTodo = (newTodo) => {
+    //Entire todo list sorted by ascending dates
     setTodos(
-      [...todos, newTodo].sort((a, b) => (b.date - a.date))
+      [...todos, newTodo].sort((a, b) => (a.date - b.date))
     )
   }
 
@@ -75,9 +81,21 @@ function App() {
     )
   }
 
+  const handleCloseMessage = () => {
+    setMessage({ ...message, openStatus: false })
+  }
+
+  const openMessage = (messageType, messageContent) => {
+    setMessage({
+      openStatus: true,
+      type: messageType,
+      content: messageContent
+    })
+  }
+
   return (
     <div className="App">
-      <TodoForm addTodo={addTodo} />
+      <TodoForm addTodo={addTodo} openMessage={ openMessage } />
       <TodoList
         todos={todos}
         toggle={toggle}
@@ -86,6 +104,13 @@ function App() {
         removeChecked={removeChecked}
         removeAll={removeAll}
         edit={edit}
+        openMessage={ openMessage }
+      />
+      <ResponseMessage
+        type={ message.type }
+        content={ message.content }
+        openStatus={ message.openStatus }
+        handleClose={ handleCloseMessage }
       />
     </div>
   );

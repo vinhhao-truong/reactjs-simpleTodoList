@@ -11,7 +11,7 @@ import {
 } from '@material-ui/icons'
 import {
   CancelButton,
-  OkButton
+  OkButton,
 } from './CustomComponents'
 
 const transitionSlide = forwardRef((props, ref) => {
@@ -20,47 +20,70 @@ const transitionSlide = forwardRef((props, ref) => {
 
 const RemoveDialog = ({
   open,
+  removeType,
+  todoTask,
   setOpen,
-  allOrChecked,
   removeChecked,
-  removeAll
+  removeAll,
+  removeOne,
+  openMessage
 }) => {
+  const setRemoveMessage = (messageContent) => {
+    openMessage("error", messageContent)
+  }
+
   const handleRemove = () => {
-    (allOrChecked) ? removeAll() : removeChecked();
-    setOpen({ ...open, openStatus: false });
+    switch(removeType) {
+      case "all":
+        removeAll();
+        setRemoveMessage("All Tasks Deleted!");
+        break;
+      case "marked":
+        removeChecked();
+        setRemoveMessage("Marked Tasks Deleted!");
+        break;
+      default:
+        removeOne();  
+        setRemoveMessage(`${todoTask} Deleted!`);     
+    }
+    setOpen(false);
   }
+
   const handleOnClose = () => {
-    setOpen({ ...open, openStatus: false });
+    setOpen(false);    
   }
+
   return (
-    <Dialog
-      TransitionComponent={ transitionSlide }
-      open={ open }
-      onClose={ handleOnClose }
-      maxWidth="sm"
-      fullWidth
-    >
-      <DialogTitle style={{ display: "flex", justifyContent: "center" }} >
-        { (allOrChecked) ? "Delete All Tasks?" : "Delete Marked?" }
-      </DialogTitle>
-      <DialogActions >
-        <CancelButton
-          size="small"
-          aria-label="cancel"
-          onClick={ handleOnClose }
-        >
-          <Close />
-        </CancelButton>
-        <OkButton
-          autoFocus
-          size="small"
-          aria-label="ok"
-          onClick={ handleRemove }
-        >
-          <Check />
-        </OkButton>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog
+        TransitionComponent={ transitionSlide }
+        open={ open }
+        onClose={ handleOnClose }
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle style={{ display: "flex", justifyContent: "center" }} >
+          { (removeType === "all" || removeType === "marked") ? `Delete ${removeType} tasks?` : `Delete ${todoTask}?` }
+        </DialogTitle>
+        <DialogActions >
+          <CancelButton
+            size="small"
+            aria-label="cancel"
+            onClick={ handleOnClose }
+          >
+            <Close />
+          </CancelButton>
+          <OkButton
+            autoFocus
+            size="small"
+            aria-label="ok"
+            onClick={ handleRemove }
+          >
+            <Check />
+          </OkButton>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 

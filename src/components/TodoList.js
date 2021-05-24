@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Todo from './Todo';
+
 import { useMediaQuery } from 'react-responsive';
 import {
   Button,
@@ -23,7 +24,8 @@ const TodoList = ({
   remove,
   removeChecked,
   removeAll,
-  edit
+  edit,
+  openMessage
 }) => {
   const isDesktopOrLaptop = useMediaQuery({ query: '(min-device-width: 1224px)' })
   const isTablet = useMediaQuery({ query: '(max-device-width: 768px)' })
@@ -31,17 +33,20 @@ const TodoList = ({
   const markCheckboxStyles = useMarkCheckboxStyles();
   const blankCheckboxStyles = useBlankCheckboxStyles();
 
-  const [openRemoveDialog, setOpenRemoveDialog] = useState({ openStatus: false, allOrChecked: false });
+  const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
+  const [removeContent, setRemoveContent] = useState("");
 
   const allCompleted = (todos.filter(todo => todo.completed === true).length === todos.length) ? true : false;
   const allIncompleted = (todos.filter(todo => todo.completed === false).length === todos.length) ? true : false;
 
-  const handleOpenRemoveCheckedDialog = () => {
-    setOpenRemoveDialog({ openStatus: true, allOrChecked: false });
+  const handleRemoveAllDialog = () => {
+    setOpenRemoveDialog(true);
+    setRemoveContent("all")
   }
 
-  const handleOpenRemoveAllDialog = () => {
-    setOpenRemoveDialog({ openStatus: true, allOrChecked: true });
+  const handleRemoveMarkedDialog = () => {
+    setOpenRemoveDialog(true);
+    setRemoveContent("marked")
   }
 
   const handleCheckAll = (e) => {
@@ -54,8 +59,6 @@ const TodoList = ({
       e.target.checked = false;
     }
   }
-
-  console.log(todos)
 
   const theList = (listWidth) => {
     return (
@@ -89,37 +92,39 @@ const TodoList = ({
                     (!allIncompleted) ?
                       <Button
                         color="secondary"
-                        onClick={ handleOpenRemoveCheckedDialog }
+                        onClick={ handleRemoveMarkedDialog }
                       >Delete Marked</Button> : ""
                   }
                   {
                     (isDesktopOrLaptop) ?
                       <Button
                         color="secondary"
-                        onClick={ handleOpenRemoveAllDialog }
+                        onClick={ handleRemoveAllDialog }
                       >Delete All</Button> : ""
                   }        
                 </ListItemSecondaryAction>
               </ListItem> : ""
           }
           {
-            todos.map((todo, idx) => {
-              return <Todo
+            todos.map((todo, idx) => (
+              <Todo
                 key={ idx }
                 todo={ todo }
                 toggle={ toggle }
                 remove={ remove }
                 edit={ edit }
+                openMessage={ openMessage }
               />
-            })
+            ))
           }
         </List>
         <RemoveDialog 
-          open={ openRemoveDialog.openStatus }
+          open={ openRemoveDialog }
           setOpen={ setOpenRemoveDialog }
-          allOrChecked={ openRemoveDialog.allOrChecked }
+          removeType={ removeContent }
           removeChecked={ removeChecked }
           removeAll={ removeAll }
+          openMessage={ openMessage }
         />
       </>
     )

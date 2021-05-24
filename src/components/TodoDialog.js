@@ -23,7 +23,7 @@ import {
 const darkGreen = "#0fa37c";
 const darkRed = "#dd4747";
 
-const TodoDialog = ({ todo, edit, openStatus, setOpenStatus }) => {
+const TodoDialog = ({ todo, edit, openStatus, setOpenStatus, openMessage }) => {
   const [tempTodo, setTempTodo] = useState(todo);
   const [editableT, setEditableT] = useState(false)  
 
@@ -59,6 +59,7 @@ const TodoDialog = ({ todo, edit, openStatus, setOpenStatus }) => {
     e.stopPropagation();
     edit(todo.id, { ...tempTodo })
     setOpenStatus(false);
+    openMessage("info", `${tempTodo.task} Modified!`)
   }
 
   const handleDialogTitleClick = (e) => {
